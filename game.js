@@ -84,10 +84,11 @@ const bg = {
     sctx.drawImage(this.sprite, this.x, y);
   },
 };
+
 const pipe = {
   top: { sprite: new Image() },
   bot: { sprite: new Image() },
-  gap: 120,  // Increase the gap to give the bird more room to pass through
+  gap: 200,  // Increase the gap to give the bird more room to pass through
   moved: true,
   pipes: [],
   draw: function () {
@@ -119,45 +120,47 @@ const pipe = {
     }
   },
 };
-// Modify bird's physics for upward floating bubble
+
 const bird = {
-  animations: [
-    { sprite: new Image() },
-    { sprite: new Image() },
-    { sprite: new Image() },
-    { sprite: new Image() },
-  ],
+  spriteSheet: new Image(),  // Load the sprite sheet
+  spriteWidth: 34,           // New width of the sprite (adjusted)
+  spriteHeight: 35,          // New height of the sprite (adjusted)
   rotatation: 0,
   x: 50,
   y: 100,
   speed: 0,
-  gravity: 0.05, // Reduced gravity to make the bird float upwards gently
-  thrust: 3.0,   // Stronger thrust to simulate the bubble rising when flapping
-  drag: 0.98,    // Less resistance (drag) for a smoother upward float
-  frame: 0,
+  gravity: 0.1,             // Gravity to simulate bubble floating upwards
+  thrust: 6.0,              // Thrust to simulate bubble rising
+  drag: 0.98,               // Smooth upward float
+  frame: 0,                 // Frame (only one frame here, but needed for consistency)
   draw: function () {
-    let h = this.animations[this.frame].sprite.height;
-    let w = this.animations[this.frame].sprite.width;
+    let h = this.spriteHeight;
+    let w = this.spriteWidth;
     sctx.save();
     sctx.translate(this.x, this.y);
-    sctx.rotate(this.rotatation * RAD);
-    sctx.drawImage(this.animations[this.frame].sprite, -w / 2, -h / 2);
+    sctx.rotate(this.rotatation * RAD); // Rotate based on speed to simulate bubble tilt
+    sctx.drawImage(
+      this.spriteSheet,     // The sprite sheet itself
+      0, 0,                 // x and y position to start drawing from (top-left corner)
+      this.spriteWidth,     // Width of the frame
+      this.spriteHeight,    // Height of the frame
+      -w / 2, -h / 2,       // x and y offset to center the image
+      w, h                  // Width and height to draw the image (same as sprite size)
+    );
     sctx.restore();
   },
   update: function () {
-    let r = parseFloat(this.animations[0].sprite.width) / 2;
+    let r = parseFloat(this.spriteWidth) / 2;  // Calculate radius for collision detection
     switch (state.curr) {
       case state.getReady:
         this.rotatation = 0;
         this.y += frames % 10 == 0 ? Math.sin(frames * RAD) : 0;
-        this.frame += frames % 10 == 0 ? 1 : 0;
         break;
       case state.Play:
-        this.frame += frames % 5 == 0 ? 1 : 0;
-        this.y += this.speed;
-        this.setRotation();
-        this.speed -= this.gravity; // Use gravity to slow down the upward motion
-        this.speed *= this.drag; // Apply drag resistance
+        this.y += this.speed;        // Update y position based on speed
+        this.setRotation();          // Set rotation based on speed
+        this.speed -= this.gravity;  // Apply gravity to slow the upward motion
+        this.speed *= this.drag;     // Apply drag for smooth movement
         if (this.y + r >= gnd.y || this.collisioned()) {
           state.curr = state.gameOver;
         }
@@ -179,16 +182,15 @@ const bird = {
         }
         break;
     }
-    this.frame = this.frame % this.animations.length;
   },
   flap: function () {
     if (this.y > 0) {
       SFX.flap.play();
-      this.speed = this.thrust; // Apply upward thrust to simulate floating upwards
+      this.speed = this.thrust; // Apply upward thrust for the bubble
     }
   },
   setRotation: function () {
-    // Adjust rotation to simulate gentle tilting when moving upward
+    // Adjust rotation based on speed to simulate tilting
     if (this.speed <= 0) {
       this.rotatation = Math.max(-15, (-25 * this.speed) / (-1 * this.thrust));
     } else if (this.speed > 0) {
@@ -197,10 +199,9 @@ const bird = {
   },
   collisioned: function () {
     if (!pipe.pipes.length) return;
-    let bird = this.animations[0].sprite;
+    let r = this.spriteHeight / 4 + this.spriteWidth / 4; // Radius of the bird (adjusted)
     let x = pipe.pipes[0].x;
     let y = pipe.pipes[0].y;
-    let r = bird.height / 4 + bird.width / 4;
     let roof = y + parseFloat(pipe.top.sprite.height);
     let floor = roof + pipe.gap;
     let w = parseFloat(pipe.top.sprite.width);
@@ -302,10 +303,8 @@ UI.gameOver.sprite.src = "img/go.png";
 UI.getReady.sprite.src = "img/getready.png";
 UI.tap[0].sprite.src = "img/tap/t0.png";
 UI.tap[1].sprite.src = "img/tap/t1.png";
-bird.animations[0].sprite.src = "img/bird/b0.png";
-bird.animations[1].sprite.src = "img/bird/b1.png";
-bird.animations[2].sprite.src = "img/bird/b2.png";
-bird.animations[3].sprite.src = "img/bird/b0.png";
+// Load the single image for the bubble
+bird.spriteSheet.src = "img/bird/b0.png"; // Path to the bubble PNGbird.animations[2].sprite.src = "img/bird/b2.png";
 SFX.start.src = "sfx/start.wav";
 SFX.flap.src = "sfx/flap.wav";
 SFX.score.src = "sfx/score.wav";
