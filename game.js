@@ -1,6 +1,7 @@
 const RAD = Math.PI / 180;
 const scrn = document.getElementById("canvas");
 const sctx = scrn.getContext("2d");
+//var myFont = new FontFace("8bit", "url(8bit.ttf)");
 scrn.tabIndex = 1;
 scrn.addEventListener("click", () => {
   switch (state.curr) {
@@ -231,6 +232,7 @@ const UI = {
   frame: 0,
   draw: function () {
     switch (state.curr) {
+      //Draw the get ready screen
       case state.getReady:
         this.y = parseFloat(scrn.height - this.getReady.sprite.height) / 2;
         this.x = parseFloat(scrn.width - this.getReady.sprite.width) / 2;
@@ -240,6 +242,8 @@ const UI = {
         sctx.drawImage(this.getReady.sprite, this.x, this.y);
         sctx.drawImage(this.tap[this.frame].sprite, this.tx, this.ty);
         break;
+      
+      //Draw the game over screen
       case state.gameOver:
         this.y = parseFloat(scrn.height - this.gameOver.sprite.height) / 2;
         this.x = parseFloat(scrn.width - this.gameOver.sprite.width) / 2;
@@ -247,7 +251,7 @@ const UI = {
         this.ty =
           this.y + this.gameOver.sprite.height - this.tap[0].sprite.height;
         sctx.drawImage(this.gameOver.sprite, this.x, this.y);
-        sctx.drawImage(this.tap[this.frame].sprite, this.tx, this.ty);
+        //sctx.drawImage(this.tap[this.frame].sprite, this.tx, this.ty);
         break;
     }
     this.drawScore();
@@ -256,31 +260,39 @@ const UI = {
     sctx.fillStyle = "#FFFFFF";
     sctx.strokeStyle = "#000000";
     switch (state.curr) {
+
+      //Draw the current score when playing
       case state.Play:
         sctx.lineWidth = "2";
         sctx.font = "35px Squada One";
         sctx.fillText(this.score.curr, scrn.width / 2 - 5, 50);
         sctx.strokeText(this.score.curr, scrn.width / 2 - 5, 50);
         break;
+
+      //Draw the final score and best score when game over
       case state.gameOver:
-        sctx.lineWidth = "2";
-        sctx.font = "40px Squada One";
-        let sc = `SCORE :     ${this.score.curr}`;
+        sctx.font = "20px myFont";
+
+        sctx.fillStyle = "blue";
+        sctx.strokeStyle = "black";        
+        let finalScore = `SCORE - ${this.score.curr}`;
+        let bestScore = `BEST - ${this.score.best}`;
+
         try {
           this.score.best = Math.max(
             this.score.curr,
             localStorage.getItem("best")
           );
           localStorage.setItem("best", this.score.best);
-          let bs = `BEST  :     ${this.score.best}`;
-          sctx.fillText(sc, scrn.width / 2 - 80, scrn.height / 2 + 0);
-          sctx.strokeText(sc, scrn.width / 2 - 80, scrn.height / 2 + 0);
-          sctx.fillText(bs, scrn.width / 2 - 80, scrn.height / 2 + 30);
-          sctx.strokeText(bs, scrn.width / 2 - 80, scrn.height / 2 + 30);
+          let bestScore = `BEST - ${this.score.best}`;
+          //sctx.strokeText(finalScore, scrn.width/2 - 65, scrn.height / 2 - 10);
+          sctx.fillText(finalScore, scrn.width/2 - 65, scrn.height / 2 - 10);
+          sctx.strokeText(bestScore, scrn.width/2 - 65, scrn.height / 2 + 17);          
+          sctx.fillText(bestScore, scrn.width/2 - 65, scrn.height / 2 + 17);          
         } catch (e) {
-          sctx.fillText(sc, scrn.width / 2 - 85, scrn.height / 2 + 15);
-          sctx.strokeText(sc, scrn.width / 2 - 85, scrn.height / 2 + 15);
-        }
+          sctx.strokeText(finalScore, scrn.width/2 - 65, scrn.height / 2 - 10);
+          sctx.fillText(finalScore, scrn.width/2 - 65, scrn.height / 2 - 10);
+        } 
 
         break;
     }
@@ -296,7 +308,7 @@ gnd.sprite.src = "img/ground.png";
 bg.sprite.src = "img/BG.png";
 pipe.top.sprite.src = "img/toppipe.png";
 pipe.bot.sprite.src = "img/botpipe.png";
-UI.gameOver.sprite.src = "img/go.png";
+UI.gameOver.sprite.src = "img/game-over.png";
 UI.getReady.sprite.src = "img/getready.png";
 UI.tap[0].sprite.src = "img/tap/t0.png";
 UI.tap[1].sprite.src = "img/tap/t1.png";
