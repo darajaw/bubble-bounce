@@ -58,7 +58,7 @@ const SFX = {
   flap: new Audio(),
   score: new Audio(),
   hit: new Audio(),
-  die: new Audio(),
+  pop: new Audio(),
   played: false,
 };
 const gnd = {
@@ -171,7 +171,7 @@ const bird = {
           this.y = gnd.y - r;
           this.rotatation = 90;
           if (!SFX.played) {
-            SFX.die.play();
+            SFX.pop.play();
             SFX.played = true;
           }
         }
@@ -304,11 +304,11 @@ bird.animations[0].sprite.src = "img/bird/b0.png";
 bird.animations[1].sprite.src = "img/bird/b1.png";
 bird.animations[2].sprite.src = "img/bird/b2.png";
 bird.animations[3].sprite.src = "img/bird/b0.png";
-SFX.start.src = "sfx/start.wav";
-SFX.flap.src = "sfx/flap.wav";
-SFX.score.src = "sfx/score.wav";
-SFX.hit.src = "sfx/hit.wav";
-SFX.die.src = "sfx/die.wav";
+SFX.start.src = "sfx/sfx_START.mp3";
+SFX.flap.src = "sfx/sfx_BOUNCE.mp3";
+SFX.score.src = "sfx/sfx_SCORE.mp3";
+SFX.hit.src = "sfx/sfx_POP.mp3";
+SFX.pop.src = "sfx/sfx_POP.mp3";
 
 function gameLoop() {
   update();
