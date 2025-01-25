@@ -87,7 +87,7 @@ const bg = {
 const pipe = {
   top: { sprite: new Image() },
   bot: { sprite: new Image() },
-  gap: 85,
+  gap: 120,  // Increase the gap to give the bird more room to pass through
   moved: true,
   pipes: [],
   draw: function () {
@@ -106,11 +106,11 @@ const pipe = {
     if (frames % 100 == 0) {
       this.pipes.push({
         x: parseFloat(scrn.width),
-        y: -210 * Math.min(Math.random() + 1, 1.8),
+        y: -200 * Math.min(Math.random() + 1, 1.8),
       });
     }
     this.pipes.forEach((pipe) => {
-      pipe.x -= dx;
+      pipe.x -= 2; // Slightly faster pipes for a bit more challenge
     });
 
     if (this.pipes.length && this.pipes[0].x < -this.top.sprite.width) {
@@ -119,6 +119,7 @@ const pipe = {
     }
   },
 };
+// Modify bird's physics for upward floating bubble
 const bird = {
   animations: [
     { sprite: new Image() },
@@ -130,8 +131,9 @@ const bird = {
   x: 50,
   y: 100,
   speed: 0,
-  gravity: 0.125,
-  thrust: 3.6,
+  gravity: 0.05, // Reduced gravity to make the bird float upwards gently
+  thrust: 3.0,   // Stronger thrust to simulate the bubble rising when flapping
+  drag: 0.98,    // Less resistance (drag) for a smoother upward float
   frame: 0,
   draw: function () {
     let h = this.animations[this.frame].sprite.height;
@@ -154,18 +156,18 @@ const bird = {
         this.frame += frames % 5 == 0 ? 1 : 0;
         this.y += this.speed;
         this.setRotation();
-        this.speed += this.gravity;
+        this.speed -= this.gravity; // Use gravity to slow down the upward motion
+        this.speed *= this.drag; // Apply drag resistance
         if (this.y + r >= gnd.y || this.collisioned()) {
           state.curr = state.gameOver;
         }
-
         break;
       case state.gameOver:
         this.frame = 1;
         if (this.y + r < gnd.y) {
           this.y += this.speed;
           this.setRotation();
-          this.speed += this.gravity * 2;
+          this.speed -= this.gravity * 2; // Fall faster after game over
         } else {
           this.speed = 0;
           this.y = gnd.y - r;
@@ -175,7 +177,6 @@ const bird = {
             SFX.played = true;
           }
         }
-
         break;
     }
     this.frame = this.frame % this.animations.length;
@@ -183,14 +184,15 @@ const bird = {
   flap: function () {
     if (this.y > 0) {
       SFX.flap.play();
-      this.speed = -this.thrust;
+      this.speed = this.thrust; // Apply upward thrust to simulate floating upwards
     }
   },
   setRotation: function () {
+    // Adjust rotation to simulate gentle tilting when moving upward
     if (this.speed <= 0) {
-      this.rotatation = Math.max(-25, (-25 * this.speed) / (-1 * this.thrust));
+      this.rotatation = Math.max(-15, (-25 * this.speed) / (-1 * this.thrust));
     } else if (this.speed > 0) {
-      this.rotatation = Math.min(90, (90 * this.speed) / (this.thrust * 2));
+      this.rotatation = Math.min(15, (15 * this.speed) / (this.thrust * 2)); // Limit upwards rotation
     }
   },
   collisioned: function () {
