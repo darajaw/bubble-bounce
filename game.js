@@ -300,7 +300,7 @@ bg.sprite.src = "img/BG.png";
 pipe.top.sprite.src = "img/toppipe.png";
 pipe.bot.sprite.src = "img/botpipe.png";
 UI.gameOver.sprite.src = "img/go.png";
-UI.getReady.sprite.src = "img/getready.png";
+UI.getReady.sprite.src = "";
 UI.tap[0].sprite.src = "img/tap/t0.png";
 UI.tap[1].sprite.src = "img/tap/t1.png";
 // Load the single image for the bubble
