@@ -9,6 +9,11 @@
 }
 
 @font-face {
-    font-family: 'myFont';
-    src: url('bbl.ttf');
+    font-family: 'scFont';
+    src: url('BubbleBright-Regular.otf');
+}
+
+@font-face {
+    font-family: 'goFont';
+    src: url('HOPALOPE\ TRIAL.otf');
 }

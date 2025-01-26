@@ -3,7 +3,7 @@
 const RAD = Math.PI / 180;
 const scrn = document.getElementById("canvas");
 const sctx = scrn.getContext("2d");
-//var myFont = new FontFace("8bit", "url(8bit.ttf)");
+//var scFont = new FontFace("8bit", "url(8bit.ttf)");
 scrn.tabIndex = 1;
 scrn.addEventListener("click", () => {
   switch (state.curr) {
@@ -120,7 +120,7 @@ const pipe = {
 
       this.pipes.push({
         x: parseFloat(scrn.width),
-        y: -200 * Math.min(Math.random() + 1, 1.8),
+        y: -180 * Math.min(Math.random() + 1, 1.8),
         botSprite: botPics[ranBot], // Assign a specific bottom sprite
         topSprite: topPics[ranTop], // Assign a specific top sprite
 
@@ -320,8 +320,8 @@ const UI = {
         this.tx = parseFloat(scrn.width - this.tap[0].sprite.width) / 2;
         this.ty =
           this.y + this.gameOver.sprite.height - this.tap[0].sprite.height;
-        sctx.drawImage(this.gameOver.sprite, this.x, this.y);
-        //sctx.drawImage(this.tap[this.frame].sprite, this.tx, this.ty);
+        sctx.drawImage(this.gameOver.sprite, this.x, this.y - 10);
+        sctx.drawImage(this.tap[this.frame].sprite, this.tx + 3, this.ty + 15);
         break;
     }
     this.drawScore();
@@ -334,16 +334,22 @@ const UI = {
       //Draw the current score when playing
       case state.Play:
         sctx.lineWidth = "2";
-        sctx.font = "35px myFont";
+        sctx.font = "35px scFont";
         sctx.fillText(this.score.curr, scrn.width / 2 - 5, 50);
         sctx.strokeText(this.score.curr, scrn.width / 2 - 5, 50);
         break;
 
       //Draw the final score and best score when game over
       case state.gameOver:
-        sctx.font = "20px myFont";
+        sctx.font = "40px goFont";
 
-        sctx.fillStyle = "blue";
+        sctx.fillStyle = "#445ae8"; 
+        sctx.strokeStyle = "black";      
+        sctx.fillText("GAME OVER", scrn.width/2 - 110, scrn.height / 2 - 60);
+        sctx.strokeText("GAME OVER", scrn.width/2 - 110, scrn.height / 2 - 60);
+        sctx.font = "26px scFont";
+
+        sctx.fillStyle = "#445AE8";
         sctx.strokeStyle = "black";        
         let finalScore = `SCORE - ${this.score.curr}`;
         let bestScore = `BEST - ${this.score.best}`;
@@ -355,13 +361,13 @@ const UI = {
           );
           localStorage.setItem("best", this.score.best);
           let bestScore = `BEST - ${this.score.best}`;
-          //sctx.strokeText(finalScore, scrn.width/2 - 65, scrn.height / 2 - 10);
-          sctx.fillText(finalScore, scrn.width/2 - 65, scrn.height / 2 - 10);
-          sctx.strokeText(bestScore, scrn.width/2 - 65, scrn.height / 2 + 17);          
-          sctx.fillText(bestScore, scrn.width/2 - 65, scrn.height / 2 + 17);          
+          sctx.fillText(finalScore, scrn.width/2 - 60, scrn.height / 2 - 10);
+          sctx.strokeText(finalScore, scrn.width/2 - 60, scrn.height / 2 - 10);          
+          sctx.fillText(bestScore, scrn.width/2 - 60, scrn.height / 2 + 30);
+          sctx.strokeText(bestScore, scrn.width/2 - 60, scrn.height / 2 + 30);          
         } catch (e) {
-          sctx.strokeText(finalScore, scrn.width/2 - 65, scrn.height / 2 - 10);
-          sctx.fillText(finalScore, scrn.width/2 - 65, scrn.height / 2 - 10);
+         //sctx.strokeText(finalScore, scrn.width/2 - 70, scrn.height / 2 + 6);
+          sctx.fillText(finalScore, scrn.width/2 - 70, scrn.height / 2 + 6);
         } 
 
         break;
@@ -379,7 +385,7 @@ gnd.sprite.src = "img/ground.png";
 bg.sprite.src = "img/BG.png";
 pipe.top.sprite.src = "img/wood-1.png";
 pipe.bot.sprite.src = "img/wood-1.png";
-UI.gameOver.sprite.src = "img/go.png";
+UI.gameOver.sprite.src = "img/game-over.png";
 UI.getReady.sprite.src = "";
 UI.tap[0].sprite.src = "img/tap/t0.png";
 UI.tap[1].sprite.src = "img/tap/t1.png";
