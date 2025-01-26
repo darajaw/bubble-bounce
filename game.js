@@ -94,7 +94,7 @@ const botPics = ["img/wood-1.png","img/wood-2.png", "img/wood-3.png", "img/wood-
 const pipe = {
   top: { sprite: new Image() },
   bot: { sprite: new Image() },
-  gap: 200,  // Increase the gap to give the bird more room to pass through
+  gap: 170,  // Increase the gap to give the bird more room to pass through
   moved: true,
   pipes: [],  
   draw: function () {
@@ -120,7 +120,7 @@ const pipe = {
 
       this.pipes.push({
         x: parseFloat(scrn.width),
-        y: -180 * Math.min(Math.random() + 1, 1.8),
+        y: -200 * Math.min(Math.random() + 1, 1.8) - 10,
         botSprite: botPics[ranBot], // Assign a specific bottom sprite
         topSprite: topPics[ranTop], // Assign a specific top sprite
 
