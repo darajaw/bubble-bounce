@@ -8,3 +8,13 @@
     display: block;
     width: 565px;
 }
+
+@font-face {
+    font-family: 'scFont';
+    src: url('BubbleBright-Regular.otf');
+}
+
+@font-face {
+    font-family: 'goFont';
+    src: url('HOPALOPE\ TRIAL.otf');
+}
