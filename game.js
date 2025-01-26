@@ -88,8 +88,8 @@ const bg = {
   },
 };
 
-const topPics = ["img/wood-1.png","img/wood-2.png", "img/wood-3.png", "img/wood-4.png", "img/wood-5.png"];
-const botPics = ["img/wood-1.png","img/wood-2.png", "img/wood-3.png", "img/wood-4.png", "img/wood-5.png"];
+const topPics = ["img/wood-1.png","img/wood-2.png", "img/wood-3.png", "img/wood-4.png", "img/wood-5.png", "img/wood-6.png"];
+const botPics = ["img/wood-1.png","img/wood-2.png", "img/wood-3.png", "img/wood-4.png", "img/wood-5.png", "img/wood-6.png"];
 
 const pipe = {
   top: { sprite: new Image() },
@@ -328,7 +328,8 @@ const UI = {
 
 gnd.sprite.src = "img/ground.png";
 bg.sprite.src = "img/BG.png";
-pipe.top.sprite.src = "img/topweed.png";
+pipe.top.sprite.src = "img/wood-1.png";
+pipe.bot.sprite.src = "img/wood-1.png";
 UI.gameOver.sprite.src = "img/game-over.png";
 UI.getReady.sprite.src = "img/getready.png";
 UI.tap[0].sprite.src = "img/tap/t0.png";
