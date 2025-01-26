@@ -61,7 +61,7 @@ const SFX = {
   flap: new Audio(),
   score: new Audio(),
   hit: new Audio(),
-  die: new Audio(),
+  pop: new Audio(),
   played: false,
 };
 const gnd = {
@@ -69,7 +69,7 @@ const gnd = {
   x: 0,
   y: 0,
   draw: function () {
-    this.y = 305;
+    this.y = 308;
     sctx.drawImage(this.sprite, this.x, 305);
   },
   update: function () {
@@ -143,7 +143,7 @@ const pipe = {
 const bird = {
   spriteSheet: new Image(),  // Load the sprite sheet
   spriteWidth: 34,           // New width of the sprite (adjusted)
-  spriteHeight: 35,          // New height of the sprite (adjusted)
+  spriteHeight: 34,          // New height of the sprite (adjusted)
   rotatation: 0,
   x: 50,
   y: 100,
@@ -152,26 +152,55 @@ const bird = {
   thrust: 6.0,              // Thrust to simulate bubble rising
   drag: 0.98,               // Smooth upward float
   frame: 0,                 // Frame (only one frame here, but needed for consistency)
+  groundAnim: {
+    frames: [],
+    frameCount: 7,
+    currentFrame: 0,
+    playing: false
+  },
   draw: function () {
-    let h = this.spriteHeight;
-    let w = this.spriteWidth;
-    sctx.save();
-    sctx.translate(this.x, this.y);
-    sctx.rotate(this.rotatation * RAD); // Rotate based on speed to simulate bubble tilt
-    sctx.drawImage(
-      this.spriteSheet,     // The sprite sheet itself
-      0, 0,                 // x and y position to start drawing from (top-left corner)
-      this.spriteWidth,     // Width of the frame
-      this.spriteHeight,    // Height of the frame
-      -w / 2, -h / 2,       // x and y offset to center the image
-      w, h                  // Width and height to draw the image (same as sprite size)
-    );
-    sctx.restore();
+    // If the game is over and the animation is playing...
+    if (state.curr === state.gameOver && this.groundAnim.playing) {
+      // Use the current frame from groundAnim.frames
+      const frameIdx = this.groundAnim.currentFrame;
+      const imgFrame = this.groundAnim.frames[frameIdx];
+
+      sctx.save();
+      sctx.translate(this.x, this.y);
+      // If you want rotation, keep this line:
+      sctx.rotate(this.rotatation * RAD);
+
+      // Draw the chosen PNG, centered on the bird’s position
+      sctx.drawImage(
+        imgFrame, 
+        -imgFrame.width / 2, 
+        -imgFrame.height / 2
+      );
+      sctx.restore();
+
+    } else {
+      // Otherwise, draw the normal bird sprite
+      let h = this.spriteHeight;
+      let w = this.spriteWidth;
+      sctx.save();
+      sctx.translate(this.x, this.y);
+      sctx.rotate(this.rotatation * RAD);
+      sctx.drawImage(
+        this.spriteSheet,
+        0, 0,
+        w, h,
+        -w / 2, -h / 2,
+        w, h
+      );
+      sctx.restore();
+    }
   },
   update: function () {
     let r = parseFloat(this.spriteWidth) / 2;  // Calculate radius for collision detection
     switch (state.curr) {
       case state.getReady:
+          bird.spriteSheet.src = "img/bird/b0.png"; // Path to the bubble PNGbird.animations[2].sprite.src = "img/bird/b2.png";
+
         this.rotatation = 0;
         this.y += frames % 10 == 0 ? Math.sin(frames * RAD) : 0;
         break;
@@ -181,6 +210,18 @@ const bird = {
         this.speed -= this.gravity;  // Apply gravity to slow the upward motion
         this.speed *= this.drag;     // Apply drag for smooth movement
         if (this.y + r >= gnd.y || this.collisioned()) {
+          if (this.y + r >= gnd.y) {
+            if (!SFX.played) {
+              SFX.pop.play();
+              SFX.played = true;
+            }
+
+            if(!this.groundAnim.playing){
+              this.groundAnim.playing = true;
+              this.groundAnim.currentFrame = 0;
+            }
+          } 
+
           state.curr = state.gameOver;
         }
         break;
@@ -193,13 +234,21 @@ const bird = {
         } else {
           this.speed = 0;
           this.y = gnd.y - r;
-          this.rotatation = 90;
-          if (!SFX.played) {
-            SFX.die.play();
-            SFX.played = true;
+
+          if(this.groundAnim.playing){
+            if(frames % 5 === 0){
+              this.groundAnim.currentFrame++;
+
+              if(this.groundAnim.currentFrame >= this.groundAnim.frameCount){
+                bird.spriteSheet.src = ""; // Path to the bubble PNGbird.animations[2].sprite.src = "img/bird/b2.png";
+
+                this.groundAnim.playing = false
+              }
+            }
           }
         }
         break;
+
     }
   },
   flap: function () {
@@ -330,18 +379,26 @@ gnd.sprite.src = "img/ground.png";
 bg.sprite.src = "img/BG.png";
 pipe.top.sprite.src = "img/wood-1.png";
 pipe.bot.sprite.src = "img/wood-1.png";
-UI.gameOver.sprite.src = "img/game-over.png";
-UI.getReady.sprite.src = "img/getready.png";
+UI.gameOver.sprite.src = "img/go.png";
+UI.getReady.sprite.src = "";
 UI.tap[0].sprite.src = "img/tap/t0.png";
 UI.tap[1].sprite.src = "img/tap/t1.png";
+SFX.start.src = "sfx/sfx_START.mp3";
+SFX.flap.src = "sfx/sfx_BOUNCE.mp3";
+SFX.score.src = "sfx/sfx_SCORE.mp3";
+SFX.hit.src = "sfx/sfx_HIT.mp3";
+SFX.pop.src = "sfx/sfx_POP.mp3";
 // Load the single image for the bubble
 bird.spriteSheet.src = "img/bird/b0.png"; // Path to the bubble PNGbird.animations[2].sprite.src = "img/bird/b2.png";
-SFX.start.src = "sfx/start.wav";
-SFX.flap.src = "sfx/flap.wav";
-SFX.score.src = "sfx/score.wav";
-SFX.hit.src = "sfx/hit.wav";
-SFX.die.src = "sfx/die.wav";
 
+for(let i = 1; i<=7; i++){
+  const img = new Image();
+  img.src = `img/bird/bubble_pop_frame_0${i}.png`
+  bird.groundAnim.frames.push(img);
+}
+const img = new Image();
+img.src = "";
+bird.groundAnim.frames.push(img);
 function gameLoop() {
   update();
   draw();  
