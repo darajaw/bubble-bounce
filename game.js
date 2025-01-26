@@ -66,7 +66,7 @@ const gnd = {
   x: 0,
   y: 0,
   draw: function () {
-    this.y = 305;
+    this.y = 308;
     sctx.drawImage(this.sprite, this.x, 305);
   },
   update: function () {
@@ -180,6 +180,8 @@ const bird = {
     let r = parseFloat(this.spriteWidth) / 2;  // Calculate radius for collision detection
     switch (state.curr) {
       case state.getReady:
+          bird.spriteSheet.src = "img/bird/b0.png"; // Path to the bubble PNGbird.animations[2].sprite.src = "img/bird/b2.png";
+
         this.rotatation = 0;
         this.y += frames % 10 == 0 ? Math.sin(frames * RAD) : 0;
         break;
@@ -219,7 +221,8 @@ const bird = {
               this.groundAnim.currentFrame++;
 
               if(this.groundAnim.currentFrame >= this.groundAnim.frameCount){
-                this.groundAnim.currentFrame = this.groundAnim.frameCount - 15
+                bird.spriteSheet.src = ""; // Path to the bubble PNGbird.animations[2].sprite.src = "img/bird/b2.png";
+
                 this.groundAnim.playing = false
               }
             }
@@ -362,7 +365,9 @@ for(let i = 1; i<=7; i++){
   img.src = `img/bird/bubble_pop_frame_0${i}.png`
   bird.groundAnim.frames.push(img);
 }
-
+const img = new Image();
+img.src = "";
+bird.groundAnim.frames.push(img);
 function gameLoop() {
   update();
   draw();
