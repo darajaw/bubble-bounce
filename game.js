@@ -88,8 +88,8 @@ const bg = {
   },
 };
 
-const topPics = ["img/toppencil.png","img/topfork.png", "img/stick.png","boat.png"];
-const botPics = ["img/botpencil.png","img/botfork.png", "img/stick.png","boat.png"];
+const topPics = ["img/toppencil.png","img/topfork.png", "img/stick.png","img/boat.png"];
+const botPics = ["img/botpencil.png","img/botfork.png", "img/stick.png","img/boat.png"];
 
 const pipe = {
   top: { sprite: new Image() },
