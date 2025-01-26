@@ -248,6 +248,7 @@ const bird = {
   },
   collisioned: function () {
     if (!pipe.pipes.length) return;
+    gnd.y = 500
     let r = this.spriteHeight / 4 + this.spriteWidth / 4; // Radius of the bird (adjusted)
     let x = pipe.pipes[0].x;
     let y = pipe.pipes[0].y;
