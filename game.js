@@ -1,3 +1,5 @@
+
+
 const RAD = Math.PI / 180;
 const scrn = document.getElementById("canvas");
 const sctx = scrn.getContext("2d");
@@ -85,35 +87,51 @@ const bg = {
     sctx.drawImage(this.sprite, this.x, y);
   },
 };
+
+const topPics = ["img/topweed.png","img/toppencil.png","img/topfork.png", ];
+const botPics = ["img/botweed.png","img/botpencil.png","img/botfork.png", ];
+
 const pipe = {
   top: { sprite: new Image() },
   bot: { sprite: new Image() },
   gap: 85,
   moved: true,
-  pipes: [],
+  pipes: [],  
   draw: function () {
     for (let i = 0; i < this.pipes.length; i++) {
       let p = this.pipes[i];
-      sctx.drawImage(this.top.sprite, p.x, p.y);
-      sctx.drawImage(
-        this.bot.sprite,
-        p.x,
-        p.y + parseFloat(this.top.sprite.height) + this.gap
-      );
+
+      let topImage = new Image();
+      topImage.src = p.topSprite;      
+      sctx.drawImage(topImage, p.x, p.y);
+      
+      let botImage = new Image();
+      botImage.src = p.botSprite;      
+      sctx.drawImage(botImage, p.x, p.y + parseFloat(this.top.sprite.height) + this.gap);
     }
   },
   update: function () {
     if (state.curr != state.Play) return;
+  
+    // Generate a new pipe every 100 frames
     if (frames % 100 == 0) {
+      let ranTop = Math.floor(Math.random() * topPics.length); // Randomize the image
+      let ranBot = Math.floor(Math.random() * botPics.length); // Randomize the image
+
       this.pipes.push({
         x: parseFloat(scrn.width),
         y: -210 * Math.min(Math.random() + 1, 1.8),
+        botSprite: botPics[ranBot], // Assign a specific bottom sprite
+        topSprite: topPics[ranTop], // Assign a specific top sprite
       });
     }
+  
+    // Update the position of each pipe
     this.pipes.forEach((pipe) => {
       pipe.x -= dx;
     });
-
+  
+    // Remove pipes that move off-screen
     if (this.pipes.length && this.pipes[0].x < -this.top.sprite.width) {
       this.pipes.shift();
       this.moved = true;
@@ -264,7 +282,7 @@ const UI = {
       //Draw the current score when playing
       case state.Play:
         sctx.lineWidth = "2";
-        sctx.font = "35px Squada One";
+        sctx.font = "35px myFont";
         sctx.fillText(this.score.curr, scrn.width / 2 - 5, 50);
         sctx.strokeText(this.score.curr, scrn.width / 2 - 5, 50);
         break;
@@ -304,10 +322,10 @@ const UI = {
   },
 };
 
+
 gnd.sprite.src = "img/ground.png";
 bg.sprite.src = "img/BG.png";
-pipe.top.sprite.src = "img/toppipe.png";
-pipe.bot.sprite.src = "img/botpipe.png";
+pipe.top.sprite.src = "img/topweed.png";
 UI.gameOver.sprite.src = "img/game-over.png";
 UI.getReady.sprite.src = "img/getready.png";
 UI.tap[0].sprite.src = "img/tap/t0.png";
@@ -324,7 +342,7 @@ SFX.die.src = "sfx/die.wav";
 
 function gameLoop() {
   update();
-  draw();
+  draw();  
   frames++;
 }
 
@@ -338,9 +356,8 @@ function update() {
 function draw() {
   sctx.fillStyle = "#30c0df";
   sctx.fillRect(0, 0, scrn.width, scrn.height);
-  bg.draw();
-  pipe.draw();
-
+  bg.draw();  
+  pipe.draw();  
   bird.draw();
   gnd.draw();
   UI.draw();
