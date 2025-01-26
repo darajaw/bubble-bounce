@@ -17,7 +17,7 @@ scrn.addEventListener("click", () => {
     case state.gameOver:
       state.curr = state.getReady;
       bird.speed = 0;
-      bird.y = 100;
+      bird.y = 125;
       pipe.pipes = [];
       UI.score.curr = 0;
       SFX.played = false;
@@ -39,7 +39,7 @@ scrn.onkeydown = function keyDown(e) {
       case state.gameOver:
         state.curr = state.getReady;
         bird.speed = 0;
-        bird.y = 100;
+        bird.y = 125;
         pipe.pipes = [];
         UI.score.curr = 0;
         SFX.played = false;
@@ -84,7 +84,7 @@ const bg = {
   y: 0,
   draw: function () {
     y = parseFloat(scrn.height - this.sprite.height);
-    sctx.drawImage(this.sprite, this.x, 150);
+    sctx.drawImage(this.sprite, this.x, 149);
   },
 };
 
@@ -146,7 +146,7 @@ const bird = {
   spriteHeight: 34,          // New height of the sprite (adjusted)
   rotatation: 0,
   x: 50,
-  y: 100,
+  y: 125,
   speed: 0,
   gravity: 0.1,             // Gravity to simulate bubble floating upwards
   thrust: 6.0,              // Thrust to simulate bubble rising
@@ -199,7 +199,7 @@ const bird = {
     let r = parseFloat(this.spriteWidth) / 2;  // Calculate radius for collision detection
     switch (state.curr) {
       case state.getReady:
-          bird.spriteSheet.src = "img/bird/b0.png"; // Path to the bubble PNGbird.animations[2].sprite.src = "img/bird/b2.png";
+          bird.spriteSheet.src = "img/bubble/bubble_pop_frame_01.png"; // Path to the bubble PNGbird.animations[2].sprite.src = "img/bird/b2.png";
 
         this.rotatation = 0;
         this.y += frames % 10 == 0 ? Math.sin(frames * RAD) : 0;
@@ -236,7 +236,7 @@ const bird = {
           this.y = gnd.y - r;
 
           if(this.groundAnim.playing){
-            if(frames % 5 === 0){
+            if(frames % 4 === 0){
               this.groundAnim.currentFrame++;
 
               if(this.groundAnim.currentFrame >= this.groundAnim.frameCount){
@@ -267,6 +267,7 @@ const bird = {
   },
   collisioned: function () {
     if (!pipe.pipes.length) return;
+    gnd.y = 500
     let r = this.spriteHeight / 4 + this.spriteWidth / 4; // Radius of the bird (adjusted)
     let x = pipe.pipes[0].x;
     let y = pipe.pipes[0].y;
@@ -395,11 +396,11 @@ SFX.score.src = "sfx/sfx_SCORE.mp3";
 SFX.hit.src = "sfx/sfx_HIT.mp3";
 SFX.pop.src = "sfx/sfx_POP.mp3";
 // Load the single image for the bubble
-bird.spriteSheet.src = "img/bird/b0.png"; // Path to the bubble PNGbird.animations[2].sprite.src = "img/bird/b2.png";
+bird.spriteSheet.src = "img/bubble/bubble_pop_frame_01.png"; // Path to the bubble PNGbird.animations[2].sprite.src = "img/bird/b2.png";
 
 for(let i = 1; i<=7; i++){
   const img = new Image();
-  img.src = `img/bird/bubble_pop_frame_0${i}.png`
+  img.src = `img/bubble/bubble_pop_frame_0${i}.png`
   bird.groundAnim.frames.push(img);
 }
 const img = new Image();
