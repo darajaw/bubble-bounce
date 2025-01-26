@@ -66,8 +66,8 @@ const gnd = {
   x: 0,
   y: 0,
   draw: function () {
-    this.y = parseFloat(scrn.height - this.sprite.height);
-    sctx.drawImage(this.sprite, this.x, this.y);
+    this.y = 305;
+    sctx.drawImage(this.sprite, this.x, 305);
   },
   update: function () {
     if (state.curr != state.Play) return;
@@ -81,7 +81,7 @@ const bg = {
   y: 0,
   draw: function () {
     y = parseFloat(scrn.height - this.sprite.height);
-    sctx.drawImage(this.sprite, this.x, y);
+    sctx.drawImage(this.sprite, this.x, 150);
   },
 };
 
@@ -325,7 +325,7 @@ function update() {
 }
 
 function draw() {
-  sctx.fillStyle = "#30c0df";
+  sctx.fillStyle = "#1B8C68";
   sctx.fillRect(0, 0, scrn.width, scrn.height);
   bg.draw();
   pipe.draw();
