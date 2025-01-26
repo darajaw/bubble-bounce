@@ -156,6 +156,13 @@ const bird = {
         this.setRotation();
         this.speed += this.gravity;
         if (this.y + r >= gnd.y || this.collisioned()) {
+          if (this.y + r >= gnd.y) {
+            if (!SFX.played) {
+              SFX.pop.play();
+              SFX.played = true;
+            }
+          } 
+
           state.curr = state.gameOver;
         }
 
@@ -170,10 +177,6 @@ const bird = {
           this.speed = 0;
           this.y = gnd.y - r;
           this.rotatation = 90;
-          if (!SFX.played) {
-            SFX.pop.play();
-            SFX.played = true;
-          }
         }
 
         break;
@@ -307,7 +310,7 @@ bird.animations[3].sprite.src = "img/bird/b0.png";
 SFX.start.src = "sfx/sfx_START.mp3";
 SFX.flap.src = "sfx/sfx_BOUNCE.mp3";
 SFX.score.src = "sfx/sfx_SCORE.mp3";
-SFX.hit.src = "sfx/sfx_POP.mp3";
+SFX.hit.src = "sfx/sfx_HIT.mp3";
 SFX.pop.src = "sfx/sfx_POP.mp3";
 
 function gameLoop() {
