@@ -58,7 +58,7 @@ const SFX = {
   flap: new Audio(),
   score: new Audio(),
   hit: new Audio(),
-  die: new Audio(),
+  pop: new Audio(),
   played: false,
 };
 const gnd = {
@@ -162,6 +162,13 @@ const bird = {
         this.speed -= this.gravity;  // Apply gravity to slow the upward motion
         this.speed *= this.drag;     // Apply drag for smooth movement
         if (this.y + r >= gnd.y || this.collisioned()) {
+          if (this.y + r >= gnd.y) {
+            if (!SFX.played) {
+              SFX.pop.play();
+              SFX.played = true;
+            }
+          } 
+
           state.curr = state.gameOver;
         }
         break;
@@ -175,10 +182,6 @@ const bird = {
           this.speed = 0;
           this.y = gnd.y - r;
           this.rotatation = 90;
-          if (!SFX.played) {
-            SFX.die.play();
-            SFX.played = true;
-          }
         }
         break;
     }
@@ -303,13 +306,13 @@ UI.gameOver.sprite.src = "img/go.png";
 UI.getReady.sprite.src = "";
 UI.tap[0].sprite.src = "img/tap/t0.png";
 UI.tap[1].sprite.src = "img/tap/t1.png";
+SFX.start.src = "sfx/sfx_START.mp3";
+SFX.flap.src = "sfx/sfx_BOUNCE.mp3";
+SFX.score.src = "sfx/sfx_SCORE.mp3";
+SFX.hit.src = "sfx/sfx_HIT.mp3";
+SFX.pop.src = "sfx/sfx_POP.mp3";
 // Load the single image for the bubble
 bird.spriteSheet.src = "img/bird/b0.png"; // Path to the bubble PNGbird.animations[2].sprite.src = "img/bird/b2.png";
-SFX.start.src = "sfx/start.wav";
-SFX.flap.src = "sfx/flap.wav";
-SFX.score.src = "sfx/score.wav";
-SFX.hit.src = "sfx/hit.wav";
-SFX.die.src = "sfx/die.wav";
 
 function gameLoop() {
   update();
